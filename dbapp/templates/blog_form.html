@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <title>Create Blog</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/summarize.css' %}">
+</head>
+<body class="body">
+    <!-- Include navbar -->
+    {% include 'navbar.html' %}
+
+    <section class="create_blog_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Create <span>Blog</span>
+                </h2>
+                <p>
+                    Write and generate your blog using AI.
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="box">
+                        <div class="detail-box">
+                            <form method="post" action="{% url 'create_blog' %}">
+                                {% csrf_token %}
+                                <div class="input_container">
+                                    <input type="text" name="title" class="input_field" placeholder="Enter Blog Title" required>
+                                </div>
+                                <div class="input_container">
+                                    <input type="text" name="tone" class="input_field" placeholder="Enter Desired Tone (e.g., formal, casual)" required>
+                                </div>
+                                <div class="input_container">
+                                    <input type="number" name="word_count" class="input_field" placeholder="Enter Desired Word Count" required>
+                                </div>
+                                <button type="submit" class="input_button">Generate Blog</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

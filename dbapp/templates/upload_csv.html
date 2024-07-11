@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis on Dataset</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/senti.css' %}">
+
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <h1>Upload CSV File for Sentiment Analysis</h1>
+
+    <!-- Form for uploading CSV file -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required>
+        <br><br>
+        <button type="submit">Next</button>
+    </form>
+
+    <!-- Display error message if any -->
+    {% if error_message %}
+        <p><strong>Error:</strong> {{ error_message }}</p>
+    {% endif %}
+
+    <!-- If CSV is uploaded, show the column selection form -->
+    {% if csv_uploaded %}
+        <hr>
+        <h2>Select Column for Sentiment Analysis:</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="csv_file_path" value="{{ csv_file_path }}">
+            <label for="selected_column">Select Column:</label>
+            <select name="selected_column" id="selected_column" required>
+                {% for column in columns %}
+                    <option value="{{ column }}">{{ column }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">Analyze</button>
+        </form>
+    {% endif %}
+
+    <!-- If sentiment results are available, display them -->
+    {% if sentiment_results %}
+        <hr>
+        <h2>Sentiment Analysis Results:</h2>
+        <p><strong>Detailed Sentiment Analysis:</strong></p>
+        <p>{{ sentiment_results.summary }}</p>
+        
+        <p><strong>Basic Sentiment Analysis Results:</strong></p>
+        <p>Overall Sentiment Category: {{ sentiment_results.sentiment_category }}</p>
+        <p>Compound Score: {{ sentiment_results.compound_score }}</p>
+        <p>Negative: {{ sentiment_results.negative }}%</p>
+        <p>Neutral: {{ sentiment_results.neutral }}%</p>
+        <p>Positive: {{ sentiment_results.positive }}%</p>
+    {% endif %}
+</body>
+</html>

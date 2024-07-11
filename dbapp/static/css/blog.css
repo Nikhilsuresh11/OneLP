@@ -1,0 +1,55 @@
+/* Import Google Fonts if needed */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    color: #0b0b0b; /* Adjusted text color for better readability */
+}
+
+h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #0a0a0a; /* Adjusted heading color */
+}
+
+
+p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #090909; /* Adjusted paragraph text color */
+}
+
+.summary{
+    color:#0a0a0a
+}
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 2em;
+    }
+    
+    p {
+        font-size: 1em;
+        color: #070707;
+    }
+}

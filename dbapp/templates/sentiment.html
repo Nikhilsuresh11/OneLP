@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/senti.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <section class="sentiment_analysis_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h1>Sentiment Analysis</h1>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input_container">
+                    <textarea name="user_text" rows="4" cols="50" class="input_field textarea_field" placeholder="Enter your text here..."></textarea>
+                    <button type="submit" class="input_button">Analyze</button>
+                </div>
+            </form>
+            {% if user_text %}
+                <div class="result_container">
+                    <h2>Input Text:</h2> <p>{{ user_text }}</p>
+                    <h2>Sentiment Category:</h2> <p>{{ category }}</p>
+                    <h2>Sentiment Scores:</h2>
+                    <p>Positive: {{ sentiment_dict.pos }}</p>
+                    <p>Neutral: {{ sentiment_dict.neu }}</p>
+                    <p>Negative: {{ sentiment_dict.neg }}</p>
+                    <p>Compound: {{ sentiment_dict.compound }}</p>
+                    <h2>Summary:</h2> <p>{{ summary }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

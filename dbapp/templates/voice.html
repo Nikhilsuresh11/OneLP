@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice to Text</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/summarize.css' %}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .output-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            overflow-y: auto;
+        }
+
+        #startButton, #stopButton, #uploadButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #startButton, #uploadButton {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            margin-right: 10px;
+        }
+
+        #stopButton {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+
+        #audioInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h2>Voice to Text</h2>
+        <div class="output-box" id="result"></div>
+        <button id="startButton">Start Recording</button>
+        <button id="stopButton">Stop Recording</button>
+        <input type="file" id="audioInput" accept="audio/*">
+        <button id="uploadButton">Upload Audio File</button>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const uploadButton = document.getElementById('uploadButton');
+        const resultDiv = document.getElementById('result');
+        const audioInput = document.getElementById('audioInput');
+
+        const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        startButton.addEventListener('click', () => {
+            recognition.start();
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            resultDiv.textContent = ''; // Clear previous results
+            startButton.textContent = 'Recording...';
+        });
+
+        stopButton.addEventListener('click', () => {
+            recognition.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            startButton.textContent = 'Start Recording';
+        });
+
+        uploadButton.addEventListener('click', () => {
+            audioInput.click();
+        });
+
+        audioInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                convertAudioToText(file);
+            }
+        });
+
+        recognition.addEventListener('result', (event) => {
+            const transcript = Array.from(event.results)
+                .map(result => result[0].transcript)
+                .join('');
+
+            resultDiv.textContent = transcript;
+        });
+
+        recognition.addEventListener('end', () => {
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            startButton.textContent = 'Start Recording';
+        });
+
+        function convertAudioToText(audioFile) {
+            const formData = new FormData();
+            formData.append('audio', audioFile);
+
+            fetch('/convert_audio_to_text/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(text => {
+                resultDiv.textContent = text;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

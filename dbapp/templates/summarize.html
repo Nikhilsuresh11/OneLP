@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <title>Document Summarizer</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/summarize.css' %}">
+    <style>
+        .file_info {
+            margin-top: 10px;
+        }
+        .remove_file {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+    <script>
+        function handleFileUpload() {
+            const fileInput = document.getElementById('file_upload');
+            const fileLabel = document.querySelector('.file_label');
+            const fileInfo = document.getElementById('file_info');
+            const removeFile = document.getElementById('remove_file');
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    fileLabel.textContent = fileInput.files[0].name;
+                    fileInfo.style.display = 'block';
+                } else {
+                    fileLabel.textContent = 'No file chosen';
+                    fileInfo.style.display = 'none';
+                }
+            });
+
+            removeFile.addEventListener('click', function() {
+                fileInput.value = '';
+                fileLabel.textContent = 'No file chosen';
+                fileInfo.style.display = 'none';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', handleFileUpload);
+    </script>
+</head>
+<body class="body">
+    <!-- Include navbar -->
+    {% include 'navbar.html' %}
+
+    <section class="summarize_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Document <span>Summarizer</span>
+                <br>
+                    Summarize URLs, documents, and text with ease.
+                </h2>
+            </div>
+            <div class="row">
+                <!-- First Column - URL Input -->
+                <div class="col-md-4">
+                    <div class="box">
+                        <div class="detail-box">
+                            <h5>Enter URL to Summarize:</h5>
+                            <form method="post" action="{% url 'summarize' %}">
+                                {% csrf_token %}
+                                <div class="input_container">
+                                    <input type="text" name="url" class="input_field" placeholder="Enter URL" required>
+                                    <button type="submit" class="input_button">Summarize</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Column - Document Input -->
+                <div class="col-md-4">
+                    <div class="box">
+                        <div class="detail-box">
+                            <h5>Upload a Document:</h5>
+                            <form method="post" enctype="multipart/form-data" action="{% url 'summarize_document' %}">
+                                {% csrf_token %}
+                                <div class="input_container">
+                                    <label class="file_label" for="file_upload">No file chosen</label>
+                                    <input type="file" id="file_upload" name="document" accept=".pdf" class="file_input" required>
+                                    <button type="submit" class="input_button">Upload</button>
+                                </div>
+                                <div class="file_info" id="file_info" style="display: none;">
+                                    <span class="remove_file" id="remove_file">Remove</span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third Column - Text Input -->
+                <div class="col-md-4">
+                    <div class="box">
+                        <div class="detail-box">
+                            <h5>Enter Text to Summarize:</h5>
+                            <form method="post" action="{% url 'summarize_text' %}">
+                                {% csrf_token %}
+                                <div class="input_container">
+                                    <textarea name="text" class="input_field textarea_field" placeholder="Enter text" required></textarea>
+                                    <button type="submit" class="input_button">Summarize</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
