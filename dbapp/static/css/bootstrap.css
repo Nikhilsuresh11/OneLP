@@ -372,15 +372,17 @@ h1, .h1 {
 
 h2, .h2 {
   font-size: 2rem;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 h3, .h3 {
   font-size: 1.75rem;
+  color: rgb(0, 0, 0);
 }
 
 h4, .h4 {
   font-size: 1.5rem;
+  color: rgb(0, 0, 0);
 }
 
 h5, .h5 {

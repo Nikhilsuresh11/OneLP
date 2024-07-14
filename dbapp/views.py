@@ -168,15 +168,31 @@ def summarize_text(request):
 os.environ['TOGETHER_API_KEY'] = '97e344775bc6cef94e75ee28b2f0c03ef7429a6d24f5c63e9e1e725be142dc8b'
 client = Together(api_key=os.environ.get('TOGETHER_API_KEY'))
 
+import re
+import string
+import pickle
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def sentiment(request):
+    user_text = ""
+    prediction = None
+    category = ""
+    sentiment_dict = {}
+    summary = ""
+
     if request.method == 'POST':
         if 'user_text' in request.POST:
             user_text = request.POST.get('user_text')
             if user_text:
                 # Processing user_text
                 user_text = re.sub('[%s]' % re.escape(string.punctuation), '', user_text)
-                stop_words = list(stopwords.words('english'))
+                stop_words = set(stopwords.words('english'))
                 tokens = word_tokenize(user_text)
                 stopwords_removed = [token.lower() for token in tokens if token.lower() not in stop_words]
                 lemmatizer = WordNetLemmatizer() 
@@ -207,26 +223,27 @@ def sentiment(request):
                     category = "Neutral"
 
                 # Prepare summary input and request summary from Together API
-                summary_input = (f"Input Text: {user_text} Sentiment Category: {category}")
-                response = client.chat.completions.create(
-                    model="meta-llama/Llama-3-70b-chat-hf",
-                    messages=[{"role": "user", "content": summary_input}],
-                )
+                summary_input = f"Input Text: {user_text} Sentiment Category: {category}"
+                try:
+                    response = client.chat.completions.create(
+                        model="meta-llama/Llama-3-70b-chat-hf",
+                        messages=[{"role": "user", "content": summary_input}],
+                    )
+                    # Check response before accessing its content
+                    if response and response.choices:
+                        summary = response.choices[0].message.content
+                    else:
+                        summary = "Error: No valid response from the API"
+                except Exception as e:
+                    summary = f"Error: {str(e)}"
 
-                # Extract summary from response
-                summary = response.choices[0].message.content
-
-                # Render the sentiment template with results
-                return render(request, 'sentiment.html', {
-                    'user_text': user_text,
-                    'prediction': prediction,
-                    'category': category,
-                    'sentiment_dict': sentiment_dict,
-                    'summary': summary
-                })
-
-    return render(request, 'sentiment.html')
-
+    return render(request, 'sentiment.html', {
+        'user_text': user_text,
+        'prediction': prediction,
+        'category': category,
+        'sentiment_dict': sentiment_dict,
+        'summary': summary
+    })
 
 def create_blog(request):
     if request.method == 'POST':
