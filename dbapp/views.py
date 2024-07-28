@@ -14,9 +14,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from django.core.files.storage import FileSystemStorage
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
 import os
 import logging
 from together import Together
@@ -31,6 +28,7 @@ from sumy.parsers.plaintext import PlaintextParser
 
 def home(request):
     return render(request, 'home.html')
+
 
 
 def contact(request):
@@ -368,3 +366,75 @@ def sentiment_analysis(request):
             return render(request, 'upload_csv.html', context)
 
     return render(request, 'upload_csv.html')
+
+
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+from together import Together
+from PyPDF2 import PdfReader
+from docx import Document
+import os
+
+# Load environment variables
+os.environ['TOGETHER_API_KEY'] = '97e344775bc6cef94e75ee28b2f0c03ef7429a6d24f5c63e9e1e725be142dc8b'
+api_key = os.getenv('TOGETHER_API_KEY')
+if not api_key:
+    raise ValueError("TOGETHER_API_KEY is not set in the environment variables")
+
+# Initialize Together client with your API key
+client = Together(api_key=api_key)
+
+def extract_text(file):
+    text = ""
+    if file.name.endswith('.pdf'):
+        reader = PdfReader(file)
+        for page in reader.pages:
+            text += page.extract_text() or ''
+    elif file.name.endswith('.docx'):
+        doc = Document(file)
+        for paragraph in doc.paragraphs:
+            text += paragraph.text + '\n'
+    else:
+        text = file.read().decode('utf-8')
+    return text
+
+def chatbot_response(conversation_history, document_text):
+    formatted_messages = [{"role": msg["role"], "content": msg["content"]} for msg in conversation_history]
+    if document_text:
+        formatted_messages.insert(0, {"role": "system", "content": "Document content: " + document_text})
+    response = client.chat.completions.create(
+        model="meta-llama/Llama-3-70b-chat-hf",
+        messages=formatted_messages,
+    )
+    return response.choices[0].message.content
+
+@csrf_exempt
+def chat_view(request):
+    if "messages" not in request.session:
+        request.session["messages"] = []
+    if "document_text" not in request.session:
+        request.session["document_text"] = ""
+
+    if request.method == "POST":
+        if 'csv_file' in request.FILES:
+            uploaded_file = request.FILES['csv_file']
+            file_path = default_storage.save(uploaded_file.name, uploaded_file)
+            with default_storage.open(file_path) as file:
+                request.session["document_text"] = extract_text(file)
+            return redirect('chat')
+        elif 'user_input' in request.POST:
+            user_input = request.POST.get('user_input')
+            if user_input:
+                request.session["messages"].append({"role": "user", "content": user_input})
+                try:
+                    response = chatbot_response(request.session["messages"], request.session["document_text"])
+                    request.session["messages"].append({"role": "assistant", "content": response})
+                except Exception as e:
+                    return render(request, 'chat.html', {"error_message": f"Error: {e}"})
+            return redirect('chat')
+
+    return render(request, 'chat.html', {
+        "messages": request.session.get("messages", []),
+        "document_text": request.session.get("document_text", ""),
+    })

@@ -1,41 +1,41 @@
-/* Import Google Fonts */
+/* Import Google Fonts if needed */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
 
 /* Global Styles */
 body {
     margin: 0;
-    padding: 0;
+    padding: 20px;
     font-family: 'Roboto', sans-serif;
-    background: #f0f2f5;
-    color: #333;
-}
-
-h1, h2 {
-    font-family: 'Roboto Slab', serif;
-    color: #0a0a0a;
+    background-color: #f0f2f5;
+    color: #0b0b0b; /* Adjusted text color for better readability */
 }
 
 h1 {
-    font-size: 2.5em;
     text-align: center;
     color: #31baff;
-    margin-bottom: 20px;
 }
 
 h2 {
-    font-size: 2em;
-    text-align: center;
-    color: #030303;
+    font-size: 2.5em;
     margin-bottom: 20px;
+    color: #0a0a0a; /* Adjusted heading color */
 }
 
 p {
-    font-size: 1.1em;
-    color: #080808;
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #090909; /* Adjusted paragraph text color */
 }
 
-/* Container Styles */
+.error_message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -54,12 +54,13 @@ p {
 
 .input_field {
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     padding: 15px;
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
+    resize: none;
 }
 
 .input_button {
@@ -77,44 +78,25 @@ p {
     background: #45a049;
 }
 
-.error_message {
-    color: red;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 .result_container {
+    margin-top: 30px;
+    padding: 20px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 30px;
 }
 
-.result_content {
-    font-size: 1.1em;
-    color: #333;
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
-.result_content p {
-    margin: 10px 0;
+.message.user {
+    background-color: #e1f5fe;
+    text-align: right;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-    .input_field, .input_button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 576px) {
-    h2 {
-        font-size: 1.8em;
-    }
-    .input_field {
-        font-size: 0.9em;
-    }
+.message.assistant {
+    background-color: #f0f4c3;
 }

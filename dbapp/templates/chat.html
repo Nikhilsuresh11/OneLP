@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/senti.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h1>Document Chatbot</h1>
+
+        <!-- File Upload Form -->
+        <form method="post" enctype="multipart/form-data" action="{% url 'chat' %}">
+            {% csrf_token %}
+            <div class="input_container">
+                <input type="file" name="csv_file" accept=".pdf, .docx, .txt" class="input_field">
+                <button type="submit" class="input_button">Upload</button>
+            </div>
+        </form>
+
+        <!-- Display error message if any -->
+        {% if error_message %}
+            <div class="error_message">
+                <p><strong>Error:</strong> {{ error_message }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Display the conversation -->
+        <div class="result_container">
+            {% for message in messages %}
+                <div class="message {{ message.role }}">
+                    <p>{{ message.content }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Chat Input Form -->
+        <form method="post" action="{% url 'chat' %}">
+            {% csrf_token %}
+            <div class="input_container">
+                <input type="text" name="user_input" class="input_field" placeholder="Type your question here...">
+                <button type="submit" class="input_button">Send</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
