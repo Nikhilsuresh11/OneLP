@@ -25,6 +25,21 @@ from pydub import AudioSegment
 import json
 import PyPDF2
 from sumy.parsers.plaintext import PlaintextParser
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Retrieve the API key from environment variables
+api_key = os.getenv('TOGETHER_API_KEY')
+if not api_key:
+    raise ValueError("TOGETHER_API_KEY is not set in the environment variables")
+
 
 def home(request):
     return render(request, 'home.html')
@@ -90,8 +105,6 @@ def summarize_url(request):
 
     return render(request, 'summarize.html')
 
-os.environ['TOGETHER_API_KEY'] = '97e344775bc6cef94e75ee28b2f0c03ef7429a6d24f5c63e9e1e725be142dc8b'
-client = Together(api_key=os.environ.get('TOGETHER_API_KEY'))
 
 
 def extract_text_from_pdf(pdf_path):
@@ -163,8 +176,7 @@ def summarize_text(request):
 
 
 
-os.environ['TOGETHER_API_KEY'] = '97e344775bc6cef94e75ee28b2f0c03ef7429a6d24f5c63e9e1e725be142dc8b'
-client = Together(api_key=os.environ.get('TOGETHER_API_KEY'))
+
 
 import re
 import string
@@ -377,10 +389,6 @@ from docx import Document
 import os
 
 # Load environment variables
-os.environ['TOGETHER_API_KEY'] = '97e344775bc6cef94e75ee28b2f0c03ef7429a6d24f5c63e9e1e725be142dc8b'
-api_key = os.getenv('TOGETHER_API_KEY')
-if not api_key:
-    raise ValueError("TOGETHER_API_KEY is not set in the environment variables")
 
 # Initialize Together client with your API key
 client = Together(api_key=api_key)
