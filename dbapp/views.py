@@ -380,15 +380,8 @@ def sentiment_analysis(request):
     return render(request, 'upload_csv.html')
 
 
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.core.files.storage import default_storage
-from together import Together
-from PyPDF2 import PdfReader
-from docx import Document
-import os
 
-# Load environment variables
+
 
 # Initialize Together client with your API key
 client = Together(api_key=api_key)
