@@ -6,8 +6,6 @@ import nltk
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import re
 import string
-import csv
-import io
 import pickle
 import pandas as pd
 from nltk.corpus import stopwords
@@ -26,6 +24,9 @@ import json
 import PyPDF2
 from sumy.parsers.plaintext import PlaintextParser
 from dotenv import load_dotenv
+from django.shortcuts import render
+from pymongo import MongoClient
+from db import db
 
 load_dotenv()
 
@@ -44,6 +45,52 @@ if not api_key:
 def home(request):
     return render(request, 'home.html')
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from pymongo import MongoClient
+from django.contrib.auth.models import User
+
+users_collection = db['users']
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password. Please try again.')
+
+    return render(request, 'login.html')
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Save user data in MongoDB
+            user_data = {
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'password': user.password  # Store hashed password
+            }
+            users_collection.insert_one(user_data)
+
+            return redirect('login')
+        else:
+            messages.error(request, "Invalid form submission. Please correct the errors.")
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'signup.html', {'form': form})
 
 
 def contact(request):
@@ -94,7 +141,7 @@ def summarize_url(request):
                 doc = parser.document
                 
                 summarizer = TextRankSummarizer()
-                summary_sentences = summarizer(doc, 20)  # Change the number of sentences as needed
+                summary_sentences = summarizer(doc, 50)  # Change the number of sentences as needed
                 
                 summary_text = ' '.join([str(sentence) for sentence in summary_sentences])
                 
@@ -255,12 +302,14 @@ def sentiment(request):
         'summary': summary
     })
 
+  # Assuming db.py is in the same directory
+
 def create_blog(request):
     if request.method == 'POST':
         blog_title = request.POST.get('title')
         blog_tone = request.POST.get('tone')
         blog_word_count = request.POST.get('word_count')
-        
+
         try:
             # Format the user message for the API
             user_message = {
@@ -275,20 +324,30 @@ def create_blog(request):
             )
             generated_blog = response.choices[0].message.content
             
+            # Store the blog details in MongoDB
+            blog_collection = db['blogs']  # Access the collection
+            blog_data = {
+                'title': blog_title,
+                'tone': blog_tone,
+                'word_count': blog_word_count,
+                'generated_blog': generated_blog
+            }
+            blog_collection.insert_one(blog_data)  # Insert the data into the collection
+            
             # Render the generated blog
             return render(request, 'blog.html', {'generated_blog': generated_blog, 'title': blog_title})
 
         except Exception as e:
-            error_message = f"Error generating blog: {e}"
-            #logger.error(error_message, exc_info=True)
+            error_message = f"Error generating or storing blog: {e}"
             return render(request, 'error.html', {'error_message': error_message})
 
     return render(request, 'blog_form.html')
 
 
-
-
 # Function to perform sentiment analysis using Together API
+
+
+
 def perform_sentiment_analysis(text):
     response = client.chat.completions.create(
         model="meta-llama/Llama-3-70b-chat-hf",
@@ -380,10 +439,6 @@ def sentiment_analysis(request):
     return render(request, 'upload_csv.html')
 
 
-
-
-
-# Initialize Together client with your API key
 client = Together(api_key=api_key)
 
 def extract_text(file):
