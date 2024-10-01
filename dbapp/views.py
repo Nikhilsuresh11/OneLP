@@ -94,7 +94,7 @@ def summarize_url(request):
                 doc = parser.document
                 
                 summarizer = TextRankSummarizer()
-                summary_sentences = summarizer(doc, 20)  # Change the number of sentences as needed
+                summary_sentences = summarizer(doc, 50)  # Change the number of sentences as needed
                 
                 summary_text = ' '.join([str(sentence) for sentence in summary_sentences])
                 
@@ -286,9 +286,6 @@ def create_blog(request):
     return render(request, 'blog_form.html')
 
 
-
-
-# Function to perform sentiment analysis using Together API
 def perform_sentiment_analysis(text):
     response = client.chat.completions.create(
         model="meta-llama/Llama-3-70b-chat-hf",
@@ -297,7 +294,7 @@ def perform_sentiment_analysis(text):
     summary = response.choices[0].message.content
     return summary
 
-# Function to determine sentiment category based on compound score
+
 def get_sentiment_category(compound_score):
     if compound_score >= 0.05:
         return "Positive ✅"
@@ -306,7 +303,6 @@ def get_sentiment_category(compound_score):
     else:
         return "Neutral ☑️"
 
-# Main view for handling file upload and sentiment analysis
 def sentiment_analysis(request):
     if request.method == 'POST':
         if 'csv_file' in request.FILES:
@@ -380,10 +376,6 @@ def sentiment_analysis(request):
     return render(request, 'upload_csv.html')
 
 
-
-
-
-# Initialize Together client with your API key
 client = Together(api_key=api_key)
 
 def extract_text(file):
