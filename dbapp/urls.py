@@ -1,9 +1,11 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import summarize_url,home,contact,voice,summarize_text,sentiment,summarize_document,create_blog,sentiment_analysis,senti_home,chat_view
+from .views import summarize_url,home,contact,voice,summarize_text,sentiment,summarize_document,create_blog,sentiment_analysis,senti_home,chat_view,login_view,signup
 
 urlpatterns = [
+    path('login/', login_view, name='login'),
+    path('signup/', signup, name='signup'),
     path('', home, name='home'),
     path('summarize/', summarize_url, name='summarize'),
     path('summarize_text/', summarize_text, name='summarize_text'),

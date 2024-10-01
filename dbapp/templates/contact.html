@@ -1,105 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<head></head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - OneLP</title>
-    <style>
-        /* Add your custom styles here */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+<form class="form">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/contact.css' %}" />
 
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    <h2>CONTACT US</h2>
+    <p type="Name:"><input placeholder="Write your name here.."></input></p>
+    <p type="Email:"><input placeholder="Let us know how to contact you back.."></input></p>
+    <p type="Message:"><input placeholder="What would you like to tell us.."></input></p>
+    <button>Send Message</button>
+    <div>
 
-        h1 {
-            margin-top: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
-
-        .section h2 {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #007bff;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-
-<body>
-    {% include 'navbar.html' %}
-
-    <header>
-        <h1>About Us - OneLP</h1>
-    </header>
-
-    <div class="container">
-
-        <section class="section">
-            <h2>About OneLP</h2>
-            <p>
-                Welcome to OneLP! We are a team of passionate individuals dedicated to providing top-notch solutions in
-                the field of data science and analytics.
-                Our mission is to help businesses and individuals make data-driven decisions by leveraging the power of
-                modern technologies.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget libero ac velit vehicula molestie
-                vitae eget arcu.
-                Nulla facilisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-                Nulla facilisi.
-            </p>
-        </section>
-
-        <section class="section">
-            <h2>Contact Information</h2>
-            <p>Email: contact@onelp.com<br> Phone: +1234567890</p>
-        </section>
-
-        <section class="section">
-            <h2>Portfolio</h2>
-            <p>Here are some projects we've worked on:</p>
-            <ul>
-                <li>Data Analysis of Sales Trends</li>
-                <li>Machine Learning Model for Predictive Maintenance</li>
-                <li>Visualization of COVID-19 Data</li>
-            </ul>
-        </section>
-
+      <span class="fa fa-phone"></span>93440317XX
+      <span class="fa fa-envelope-o"></span> OneLP@tech.com
     </div>
-
-    <footer>
-        &copy; 2024 OneLP
-    </footer>
-
-</body>
-
-</html>
+  </form>

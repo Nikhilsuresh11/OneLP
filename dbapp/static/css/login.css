@@ -1,0 +1,75 @@
+/* Style for the login form container */
+form {
+    width: 300px;
+    margin: 100px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+/* General label styles */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Input field styles */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border 0.3s ease;
+}
+
+/* Input focus styles */
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Submit button styles */
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Submit button hover effect */
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Link to sign up page */
+a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* Link hover effect */
+a:hover {
+    color: #0056b3;
+}
+
+/* Error message styles */
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+}
