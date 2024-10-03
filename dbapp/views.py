@@ -441,19 +441,19 @@ def sentiment_analysis(request):
 
 client = Together(api_key=api_key)
 
-def extract_text(file):
-    text = ""
-    if file.name.endswith('.pdf'):
-        reader = PdfReader(file)
-        for page in reader.pages:
-            text += page.extract_text() or ''
-    elif file.name.endswith('.docx'):
-        doc = Document(file)
-        for paragraph in doc.paragraphs:
-            text += paragraph.text + '\n'
-    else:
-        text = file.read().decode('utf-8')
-    return text
+#def extract_text(file):
+ #   text = ""
+  #  if file.name.endswith('.pdf'):
+   ##     reader = PdfReader(file)
+      #  for page in reader.pages:
+     #       text += page.extract_text() or ''
+    #elif file.name.endswith('.docx'):
+     #   doc = Document(file)
+      #  for paragraph in doc.paragraphs:
+       #     text += paragraph.text + '\n'
+    #else:
+     #   text = file.read().decode('utf-8')
+    #return text
 
 import os
 from django.shortcuts import render, redirect
