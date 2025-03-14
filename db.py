@@ -5,7 +5,7 @@ import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-url = "mongodb+srv://nikhilsuresh86:pWL78P1na7zmFPGA@cluster0.k9ykt3c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+url = "mongodb+srv://nikhilsdfghj:sdfghj@cluster0.k9ykt3c.mongodb.net/?hjgf=true&w=majority&appName=Cluster0"
 client = pymongo.MongoClient(url)
 
 db = client['OneLPDB']
