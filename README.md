@@ -71,10 +71,4 @@ To install OneLP, follow these steps:
    ```
 
 
-## Contact
 
-For any questions or feedback, please reach out to us at [nikhilram1010@gmail.com](mailto:nikhilram1010@gmail.com).
-
----
-
-Thank you for using OneLP! We hope it enhances your text processing workflows.
